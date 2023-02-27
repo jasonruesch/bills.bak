@@ -1,7 +1,7 @@
 import './global.css';
 
 export const metadata = {
-  title: 'Bills',
+  title: 'Bills - Jason Ruesch',
   description: 'Track monthly and yearly bills',
 };
 
@@ -14,9 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main className="app">{children}</main>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

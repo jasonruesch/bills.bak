@@ -1,0 +1,16 @@
+{
+  "bills": [
+    {
+      "id": "1",
+      "name": "Bill 1",
+      "amount": 100,
+      "dueDate": "2024-01-01"
+    },
+    {
+      "id": "2",
+      "name": "Bill 2",
+      "amount": 200,
+      "dueDate": "2024-01-02"
+    }
+  ]
+}
