@@ -6,32 +6,26 @@ import { useRouter } from 'next/navigation';
 import Bill from '../../lib/bill.model';
 
 async function createBill(bill: Partial<Bill>): Promise<Bill> {
-  const request = fetch('/api/bills', {
+  const response = await fetch('/api/bills', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(bill),
   });
-
-  const response = await request;
-
   const createdBill = await response.json();
 
   return createdBill;
 }
 
 async function updateBill(bill: Bill): Promise<Bill> {
-  const request = fetch(`/api/bills/${bill.id}`, {
+  const response = await fetch(`/api/bills/${bill.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(bill),
   });
-
-  const response = await request;
-
   const updatedBill = await response.json();
 
   return updatedBill;
@@ -47,7 +41,11 @@ export function BillForm({ bill }: BillFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { name, amount, dueDate } = e.target as typeof e.target & {
+    const {
+      name: { value: name },
+      amount: { value: amount },
+      dueDate: { value: dueDate },
+    } = e.target as typeof e.target & {
       name: { value: string };
       amount: { value: string };
       dueDate: { value: string };
@@ -56,14 +54,14 @@ export function BillForm({ bill }: BillFormProps) {
     const result = bill?.id
       ? await updateBill({
           id: bill.id,
-          name: name.value,
-          amount: Number(amount.value),
-          dueDate: dueDate.value,
+          name: name,
+          amount: Number(amount),
+          dueDate: dueDate,
         })
       : await createBill({
-          name: name.value,
-          amount: Number(amount.value),
-          dueDate: dueDate.value,
+          name: name,
+          amount: Number(amount),
+          dueDate: dueDate,
         });
 
     if (result) {

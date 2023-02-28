@@ -6,12 +6,9 @@ import { useRouter } from 'next/navigation';
 import Bill from '../../../lib/bill.model';
 
 async function deleteBill(id: string): Promise<boolean> {
-  const request = fetch(`/api/bills/${id}`, {
+  const response = await fetch(`/api/bills/${id}`, {
     method: 'DELETE',
   });
-
-  const response = await request;
-
   const deletedBill = await response.json();
 
   return !!deletedBill;

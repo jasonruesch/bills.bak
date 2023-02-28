@@ -7,10 +7,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function getBills(): Promise<Bill[]> {
   await sleep(500);
 
-  const request = fetch(`${process.env.BILLS_API_URL}/bills`);
-
-  const response = await request;
-
+  const response = await fetch(`${process.env.BILLS_API_URL}/bills`);
   const bills = await response.json();
 
   return bills;

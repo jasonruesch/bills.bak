@@ -9,7 +9,6 @@ async function deleteBill(id: string): Promise<boolean> {
   const response = await fetch(`/api/bills/${id}`, {
     method: 'DELETE',
   });
-
   const deletedBill = await response.json();
 
   return !!deletedBill;
