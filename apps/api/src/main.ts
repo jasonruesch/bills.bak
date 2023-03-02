@@ -4,7 +4,8 @@
  */
 import { faker } from '@faker-js/faker';
 import * as jsonServer from 'json-server';
-import { bills } from './data/bills';
+
+import { bills } from './lib/data/bills';
 
 const data = {
   bills,

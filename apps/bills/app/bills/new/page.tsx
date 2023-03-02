@@ -1,5 +1,5 @@
-import { BillForm } from '../BillForm';
+import { NewBillPage } from './NewBillPage';
 
 export default async function Page() {
-  return <BillForm />;
+  return <NewBillPage />;
 }

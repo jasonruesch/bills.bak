@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Bill } from '../../../lib/bill.model';
-import { toCurrency } from '../../../lib/utils';
+import BillForm from '../../../../components/BillForm';
+import { Bill } from '../../../../lib/bill.model';
 
 async function deleteBill(id: string): Promise<boolean> {
   const response = await fetch(`/api/bills/${id}`, {
@@ -15,11 +15,11 @@ async function deleteBill(id: string): Promise<boolean> {
   return !!deletedBill;
 }
 
-export interface BillPageProps {
+export interface EditBillPageProps {
   bill: Bill;
 }
 
-export function BillPage({ bill }: BillPageProps) {
+export function EditBillPage({ bill }: EditBillPageProps) {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
@@ -67,42 +67,9 @@ export function BillPage({ bill }: BillPageProps) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-        <dl className="grid grid-cols-6">
-          <dt className="font-bold">ID:</dt>
-          <dd className="col-span-5">{bill.id}</dd>
-          <dt className="font-bold">Bill Type:</dt>
-          <dd className="col-span-5">{bill.type}</dd>
-          <dt className="font-bold">Name:</dt>
-          <dd className="col-span-5">{bill.name}</dd>
-          <dt className="font-bold">Amount:</dt>
-          <dd className="col-span-5">{toCurrency(bill.amount)}</dd>
-          <dt className="font-bold">Due Date:</dt>
-          <dd className="col-span-5">{bill.dueDate}</dd>
-          <dt className="font-bold">Auto-paid:</dt>
-          <dd className="col-span-5">{bill.autoPaid}</dd>
-          <dt className="font-bold">Balance:</dt>
-          <dd className="col-span-5">{toCurrency(bill.balance)}</dd>
-          <dt className="font-bold">Owner:</dt>
-          <dd className="col-span-5">{bill.owner}</dd>
-          <dt className="font-bold">Website:</dt>
-          <dd className="col-span-5">{bill.website}</dd>
-          <dt className="font-bold">Username:</dt>
-          <dd className="col-span-5">{bill.username}</dd>
-          <dt className="font-bold">Password:</dt>
-          <dd className="col-span-5">{bill.password}</dd>
-          <dt className="font-bold">Created:</dt>
-          <dd className="col-span-5">
-            {new Date(bill.createdAt).toISOString()}
-          </dd>
-          <dt className="font-bold">Updated:</dt>
-          <dd className="col-span-5">
-            {bill.updatedAt && new Date(bill.updatedAt)?.toISOString()}
-          </dd>
-        </dl>
-      </div>
+      <BillForm bill={bill} />
     </>
   );
 }
 
-export default BillPage;
+export default EditBillPage;

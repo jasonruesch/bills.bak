@@ -1,5 +1,5 @@
-import Bill from '../../../../lib/bill.model';
-import { BillForm } from '../../BillForm';
+import { Bill } from '../../../../lib/bill.model';
+import { EditBillPage } from './EditBillPage';
 
 async function getBill(id: string): Promise<Bill> {
   const response = await fetch(`${process.env.BILLS_API_URL}/bills/${id}`);
@@ -15,5 +15,5 @@ export default async function Page({
 }) {
   const bill = await getBill(id);
 
-  return <BillForm bill={bill} />;
+  return <EditBillPage bill={bill} />;
 }

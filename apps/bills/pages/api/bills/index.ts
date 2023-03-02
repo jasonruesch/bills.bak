@@ -1,46 +1,36 @@
-import { faker } from '@faker-js/faker';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import bills from '../../../data/bills';
-import Bill from '../../../lib/bill.model';
+import { Bill } from '../../../lib/bill.model';
+import { bills } from '../../../lib/data/bills';
+
+const uuid = () =>
+  Date.now().toString(36) + Math.random().toString(36).substring(2);
 
 async function GET(_: NextApiRequest, response: NextApiResponse<Bill[]>) {
   // status: 200 (ok)
   return response.status(200).json(bills);
 }
 
-async function POST(request: NextApiRequest, response: NextApiResponse) {
-  const {
-    name: { value: name },
-    amount: { value: amount },
-    dueDate: { value: dueDate },
-  } = request.body as typeof request.body & {
-    name: { value: string };
-    amount: { value: string };
-    dueDate: { value: string };
-  };
+async function POST(request: NextApiRequest, response: NextApiResponse<Bill>) {
+  const bill = request.body as Partial<Bill>;
 
-  if (!name || !amount || !dueDate) {
+  if (!bill.name || !bill.amount || !bill.dueDate) {
     // status: 400 (bad request)
-    return response.status(400).json({ message: 'Missing required fields' });
+    return response.status(400);
   }
 
-  const bill: Bill = {
-    id: faker.datatype.uuid(),
-    name: name,
-    amount: Number(amount),
-    dueDate: dueDate,
-  };
+  bill.id = uuid();
+  bill.createdAt = new Date();
 
-  bills.push(bill);
+  bills.push(bill as Bill);
 
   // status: 201 (created)
-  return response.status(201).json(bill);
+  return response.status(201);
 }
 
 export default function handler(
   request: NextApiRequest,
-  response: NextApiResponse
+  response: NextApiResponse<Bill[] | Bill>
 ) {
   switch (request.method) {
     case 'GET':
@@ -50,6 +40,6 @@ export default function handler(
     default:
       response.setHeader('Allow', ['GET', 'POST']);
       // status: 405 (method not allowed)
-      return response.status(405).json({ message: 'Method not allowed' });
+      return response.status(405);
   }
 }

@@ -1,5 +1,5 @@
+import { Bill } from '../../lib/bill.model';
 // Import your Client Component
-import Bill from '../../lib/bill.model';
 import BillsPage from './BillsPage';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

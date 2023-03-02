@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import Bill from '../../../lib/bill.model';
+
+import { Bill } from '../../../lib/bill.model';
 import { BillPage } from './BillPage';
 
 async function getBill(id: string): Promise<Bill> {

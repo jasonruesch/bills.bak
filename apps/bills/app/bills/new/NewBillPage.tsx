@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Bill } from '../../../lib/bill.model';
-import { toCurrency } from '../../../lib/utils';
+import BillForm from '../../../components/BillForm';
 
 async function deleteBill(id: string): Promise<boolean> {
   const response = await fetch(`/api/bills/${id}`, {
@@ -15,11 +13,7 @@ async function deleteBill(id: string): Promise<boolean> {
   return !!deletedBill;
 }
 
-export interface BillPageProps {
-  bill: Bill;
-}
-
-export function BillPage({ bill }: BillPageProps) {
+export function NewBillPage() {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
@@ -43,14 +37,14 @@ export function BillPage({ bill }: BillPageProps) {
                 <div>
                   <div className="flex items-center">
                     <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                      {bill.name}
+                      New Bill
                     </h1>
                   </div>
                 </div>
               </div>
             </div>
             <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-              <Link
+              {/* <Link
                 href={`/bills/${bill.id}/edit`}
                 className="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
               >
@@ -61,48 +55,15 @@ export function BillPage({ bill }: BillPageProps) {
                 onClick={() => handleDelete(bill.id)}
               >
                 Delete bill
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-        <dl className="grid grid-cols-6">
-          <dt className="font-bold">ID:</dt>
-          <dd className="col-span-5">{bill.id}</dd>
-          <dt className="font-bold">Bill Type:</dt>
-          <dd className="col-span-5">{bill.type}</dd>
-          <dt className="font-bold">Name:</dt>
-          <dd className="col-span-5">{bill.name}</dd>
-          <dt className="font-bold">Amount:</dt>
-          <dd className="col-span-5">{toCurrency(bill.amount)}</dd>
-          <dt className="font-bold">Due Date:</dt>
-          <dd className="col-span-5">{bill.dueDate}</dd>
-          <dt className="font-bold">Auto-paid:</dt>
-          <dd className="col-span-5">{bill.autoPaid}</dd>
-          <dt className="font-bold">Balance:</dt>
-          <dd className="col-span-5">{toCurrency(bill.balance)}</dd>
-          <dt className="font-bold">Owner:</dt>
-          <dd className="col-span-5">{bill.owner}</dd>
-          <dt className="font-bold">Website:</dt>
-          <dd className="col-span-5">{bill.website}</dd>
-          <dt className="font-bold">Username:</dt>
-          <dd className="col-span-5">{bill.username}</dd>
-          <dt className="font-bold">Password:</dt>
-          <dd className="col-span-5">{bill.password}</dd>
-          <dt className="font-bold">Created:</dt>
-          <dd className="col-span-5">
-            {new Date(bill.createdAt).toISOString()}
-          </dd>
-          <dt className="font-bold">Updated:</dt>
-          <dd className="col-span-5">
-            {bill.updatedAt && new Date(bill.updatedAt)?.toISOString()}
-          </dd>
-        </dl>
-      </div>
+      <BillForm />
     </>
   );
 }
 
-export default BillPage;
+export default NewBillPage;

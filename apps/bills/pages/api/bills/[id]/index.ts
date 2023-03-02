@@ -1,12 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import bills from '../../../../data/bills';
 
-async function GET(id: string, _: NextApiRequest, response: NextApiResponse) {
+import { Bill } from '../../../../lib/bill.model';
+import { bills } from '../../../../lib/data/bills';
+
+async function GET(
+  id: string,
+  _: NextApiRequest,
+  response: NextApiResponse<Bill>
+) {
   const bill = bills.find((bill) => bill.id === id);
 
   if (!bill) {
     // status: 404 (not found)
-    return response.status(404).json({ message: 'Not found' });
+    return response.status(404);
   }
 
   // status: 200 (ok)
@@ -16,7 +22,7 @@ async function GET(id: string, _: NextApiRequest, response: NextApiResponse) {
 async function PUT(
   id: string,
   request: NextApiRequest,
-  response: NextApiResponse
+  response: NextApiResponse<Bill>
 ) {
   const {
     name: { value: name },
@@ -30,14 +36,14 @@ async function PUT(
 
   if (!name || !amount || !dueDate) {
     // status: 400 (bad request)
-    return response.status(400).json({ message: 'Missing required fields' });
+    return response.status(400);
   }
 
   const existing = bills.find((bill) => bill.id === id);
 
   if (!existing) {
     // status: 404 (not found)
-    return response.status(404).json({ message: 'Not found' });
+    return response.status(404);
   }
 
   const bill = { ...existing, name, amount, dueDate };
@@ -49,31 +55,34 @@ async function PUT(
 async function DELETE(
   id: string,
   _: NextApiRequest,
-  response: NextApiResponse
+  response: NextApiResponse<boolean>
 ) {
   const index = bills.findIndex((bill) => bill.id === id);
 
   if (index === -1) {
     // status: 404 (not found)
-    return response.status(404).json({ message: 'Not found' });
+    return response.status(404);
   }
 
   const removed = bills.splice(index, 1);
 
   // status: 200 (ok)
-  return response.status(200).json({ success: !!removed.length });
+  return response.status(200).json(!!removed.length);
 }
 
 export default function handler(
   request: NextApiRequest,
-  response: NextApiResponse
+  response: NextApiResponse<Bill | boolean>
 ) {
+  console.log(request);
+  return response.status(200).json(true);
+
   const { method, query } = request;
   const id = query.id as string;
 
   if (!id) {
     // status: 400 (bad request)
-    return response.status(400).json({ message: 'Missing required fields' });
+    return response.status(400);
   }
 
   switch (method) {
@@ -86,6 +95,6 @@ export default function handler(
     default:
       response.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
       // status: 405 (method not allowed)
-      return response.status(405).json({ message: 'Method not allowed' });
+      return response.status(405);
   }
 }
