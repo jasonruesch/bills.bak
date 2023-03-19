@@ -1,31 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import BillForm from '../../../components/BillForm';
 
-async function deleteBill(id: string): Promise<boolean> {
-  const response = await fetch(`/api/bills/${id}`, {
-    method: 'DELETE',
-  });
-  const deletedBill = await response.json();
-
-  return !!deletedBill;
-}
-
 export function NewBillPage() {
-  const router = useRouter();
-
-  const handleDelete = async (id: string) => {
-    const success = await deleteBill(id);
-
-    if (success) {
-      router.push('/bills');
-    } else {
-      console.error('Failed to delete bill');
-    }
-  };
-
   return (
     <>
       {/* Page header */}
@@ -42,20 +19,6 @@ export function NewBillPage() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-              {/* <Link
-                href={`/bills/${bill.id}/edit`}
-                className="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-              >
-                Edit bill
-              </Link>
-              <button
-                className="ml-3 inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                onClick={() => handleDelete(bill.id)}
-              >
-                Delete bill
-              </button> */}
             </div>
           </div>
         </div>

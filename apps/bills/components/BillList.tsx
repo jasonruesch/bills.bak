@@ -432,7 +432,7 @@ export function BillList({
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                           <Link
-                            href={`/bills/${bill.id}?${queryString(
+                            href={`/bills/${bill.id}/edit?${queryString(
                               filterParams
                             )}`}
                             className="text-cyan-600 hover:text-cyan-700"

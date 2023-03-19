@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Bill } from '../../../lib/bill.model';
-import { toCurrency } from '../../../lib/utils';
+import { Bill, BillType } from '../../../lib/bill.model';
+import { queryString, toCurrency } from '../../../lib/utils';
 
 async function deleteBill(id: string): Promise<boolean> {
   const response = await fetch(`/api/bills/${id}`, {
@@ -21,6 +21,9 @@ export interface BillPageProps {
 
 export function BillPage({ bill }: BillPageProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeParam = searchParams?.get('type');
+  const type = typeParam ? (String(typeParam).toUpperCase() as BillType) : null;
 
   const handleDelete = async (id: string) => {
     const success = await deleteBill(id);
@@ -30,6 +33,14 @@ export function BillPage({ bill }: BillPageProps) {
     } else {
       console.error('Failed to delete bill');
     }
+  };
+
+  const cancelQueryString = () => {
+    // const query = router.query;
+    // delete query.id; // Clear the id before returning to the list
+
+    // return queryString({ ...query, type: type || initialValues?.type });
+    return queryString({ type: type || bill.type });
   };
 
   return (
@@ -80,7 +91,7 @@ export function BillPage({ bill }: BillPageProps) {
           <dt className="font-bold">Due Date:</dt>
           <dd className="col-span-5">{bill.dueDate}</dd>
           <dt className="font-bold">Auto-paid:</dt>
-          <dd className="col-span-5">{bill.autoPaid}</dd>
+          <dd className="col-span-5">{bill.autoPaid ? 'Yes' : 'No'}</dd>
           <dt className="font-bold">Balance:</dt>
           <dd className="col-span-5">{toCurrency(bill.balance)}</dd>
           <dt className="font-bold">Owner:</dt>
@@ -100,6 +111,17 @@ export function BillPage({ bill }: BillPageProps) {
             {bill.updatedAt && new Date(bill.updatedAt)?.toISOString()}
           </dd>
         </dl>
+
+        <div className="pt-5">
+          <div className="flex flex-col py-2 px-4 sm:flex-row sm:justify-end sm:px-6">
+            <Link
+              href={`/bills?${cancelQueryString()}`}
+              className="order-4 mb-5 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:order-1 sm:mb-0 sm:w-auto"
+            >
+              Cancel
+            </Link>
+          </div>
+        </div>
       </div>
     </>
   );
