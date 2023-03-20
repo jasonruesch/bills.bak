@@ -12,7 +12,7 @@ async function GET(
 
   if (!bill) {
     // status: 404 (not found)
-    return response.status(404);
+    return response.status(404).end();
   }
 
   // status: 200 (ok)
@@ -74,9 +74,6 @@ export default function handler(
   request: NextApiRequest,
   response: NextApiResponse<Bill | boolean>
 ) {
-  console.log(request);
-  return response.status(200).json(true);
-
   const { method, query } = request;
   const id = query.id as string;
 
