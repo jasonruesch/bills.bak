@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const bill = await getBill(id);
 
-  return { title: `${bill.name} - Bills - Jason RUesch` };
+  return { title: `${bill.name} - Bills` };
 }
 
 export default async function Page({

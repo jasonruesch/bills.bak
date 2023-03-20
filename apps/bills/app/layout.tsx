@@ -1,7 +1,7 @@
 import './global.css';
 
 export const metadata = {
-  title: 'Bills - Jason Ruesch',
+  title: 'Bills',
   description: 'Track monthly and yearly bills',
 };
 
