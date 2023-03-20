@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "bills": "nx run-many --target=serve --projects=api,bills",
-    "bills:dev": "vercel dev --listen 4200 apps/bills"
+    "start": "nx run-many --target=serve --projects=api,bills",
+    "dev": "vercel dev --listen 4200 apps/bills"
   },
   "private": true,
   "dependencies": {

@@ -49,10 +49,10 @@ async function updateBill(bill: Bill): Promise<Bill> {
 }
 
 export type BillFormProps = {
-  bill?: Partial<Bill>;
+  bill?: Bill;
 };
 
-export function BillForm({ bill: initialValues }: BillFormProps) {
+export function BillForm({ bill }: BillFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const typeParam = searchParams?.get('type');
@@ -82,28 +82,43 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
       balance: values.balance ? Number(values.balance) : null,
     };
 
-    const result = bill?.id
-      ? await updateBill({ ...bill, id: bill.id } as Bill)
+    const result = values.id
+      ? await updateBill({ ...bill, id: values.id } as Bill)
       : await createBill(bill);
 
     if (result) {
       // const query = router.query;
       // delete query.filter; // Clear the filter before returning to the list
 
-      const params = queryString({ type: bill.type });
+      const params = queryString({ type: values.type });
       router.push(`/bills?${params}`);
     }
   };
 
+  const defaultValues = {
+    name: '',
+    amount: undefined,
+    type: type || BillType.MONTHLY,
+    dueDate: '',
+    autoPaid: false,
+    balance: undefined,
+    owner: '',
+    website: '',
+    username: '',
+    password: '',
+  };
+  const initialValues = bill?.id ? bill : defaultValues;
+
   const {
     handleSubmit,
     handleChange,
+    values,
     errors,
-    values: bill,
+    touched,
     isSubmitting,
     resetForm,
   } = useFormik<Partial<Bill>>({
-    initialValues: initialValues || { type: type || BillType.MONTHLY },
+    initialValues,
     validationSchema,
     validateOnBlur: false,
     onSubmit,
@@ -122,7 +137,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
     const day = date.getDate();
     let dueDate: string;
 
-    if (bill.type === BillType.YEARLY) {
+    if (values.type === BillType.YEARLY) {
       const month = date.getMonth() + 1;
       dueDate = `${month}/${day}`;
     } else {
@@ -141,15 +156,15 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
   };
 
   useEffect(() => {
-    if (bill.type !== BillType.YEARLY && bill?.dueDate) {
-      const day = Number(bill?.dueDate);
-      const max = maxDueDate(bill.type);
+    if (values.type !== BillType.YEARLY && values.dueDate) {
+      const day = Number(values.dueDate);
+      const max = maxDueDate(values.type);
       const maxDay = max.getDate();
       if (day > maxDay) {
-        bill.dueDate = String(maxDay);
+        values.dueDate = String(maxDay);
       }
     }
-  }, [bill]);
+  }, [values]);
 
   return (
     <form
@@ -184,18 +199,20 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                   placeholder="Utility Co."
                   className={clsx(
                     'block w-full rounded-md placeholder-gray-400 sm:text-sm',
-                    errors.name
+                    !!errors.name && touched.name
                       ? 'border-red-300 pr-10 text-red-900 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-cyan-500 focus:ring-cyan-500'
                   )}
-                  aria-invalid={!!errors.name}
-                  aria-describedby={errors.name ? 'name-error' : ''}
-                  value={bill?.name || ''}
+                  aria-invalid={!!errors.name && touched.name}
+                  aria-describedby={
+                    !!errors.name && touched.name ? 'name-error' : ''
+                  }
+                  value={values.name}
                   onChange={handleChange}
                   required
                   autoFocus
                 />
-                {!!errors.name && (
+                {!!errors.name && touched.name && (
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <ExclamationCircleIcon
                       className="h-5 w-5 text-red-500"
@@ -205,7 +222,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 )}
               </div>
               <p className="mt-1 h-5 text-sm text-red-600" id="name-error">
-                {!!errors.name && errors.name}
+                {!!errors.name && touched.name && errors.name}
               </p>
             </div>
 
@@ -223,20 +240,22 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                   placeholder="$123.45"
                   className={clsx(
                     'block w-full rounded-md placeholder-gray-400 sm:text-sm',
-                    errors.amount
+                    !!errors.amount && touched.amount
                       ? 'border-red-300 pr-10 text-red-900 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-cyan-500 focus:ring-cyan-500'
                   )}
-                  aria-invalid={!!errors.amount}
-                  aria-describedby={errors.amount ? 'amount-error' : ''}
+                  aria-invalid={!!errors.amount && touched.amount}
+                  aria-describedby={
+                    !!errors.amount && touched.amount ? 'amount-error' : ''
+                  }
                   prefix={'$'}
                   decimalScale={2}
                   allowNegativeValue={false}
-                  value={bill?.amount || ''}
+                  value={values.amount}
                   onValueChange={handleNumberChange}
                   required
                 />
-                {!!errors.amount && (
+                {!!errors.amount && touched.amount && (
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <ExclamationCircleIcon
                       className="h-5 w-5 text-red-500"
@@ -246,7 +265,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 )}
               </div>
               <p className="mt-1 h-5 text-sm text-red-600" id="amount-error">
-                {!!errors.amount && errors.amount}
+                {!!errors.amount && touched.amount && errors.amount}
               </p>
             </div>
 
@@ -261,7 +280,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 name="type"
                 id="type"
                 className="mt-1 mb-6 block w-full rounded-md border-gray-300 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500 disabled:cursor-not-allowed disabled:bg-gray-50 sm:text-sm"
-                value={bill.type || (BillType.MONTHLY as string)}
+                value={values.type || (BillType.MONTHLY as string)}
                 onChange={handleTypeChange}
               >
                 <option value={BillType.MONTHLY}>Monthly</option>
@@ -281,25 +300,29 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                   name="dueDate"
                   id="dueDate"
                   placeholderText={
-                    bill.type === BillType.YEARLY ? '6/15' : '15'
+                    values.type === BillType.YEARLY ? '6/15' : '15'
                   }
-                  dateFormat={bill.type === BillType.YEARLY ? 'M/d' : 'd'}
-                  minDate={minDueDate(bill.type)}
-                  maxDate={maxDueDate(bill.type)}
+                  dateFormat={values.type === BillType.YEARLY ? 'M/d' : 'd'}
+                  minDate={minDueDate(values.type)}
+                  maxDate={maxDueDate(values.type)}
                   showPopperArrow={false}
                   className={clsx(
                     'block w-full rounded-md placeholder-gray-400 sm:text-sm',
-                    errors.dueDate
+                    !!errors.dueDate && touched.dueDate
                       ? 'border-red-300 pr-10 text-red-900 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-cyan-500 focus:ring-cyan-500'
                   )}
-                  aria-invalid={!!errors.dueDate}
-                  aria-describedby={errors.dueDate ? 'dueDate-error' : ''}
-                  selected={bill?.dueDate ? parseDueDate(bill as Bill) : null}
+                  aria-invalid={!!errors.dueDate && touched.dueDate}
+                  aria-describedby={
+                    !!errors.dueDate && touched.dueDate ? 'dueDate-error' : ''
+                  }
+                  selected={
+                    values.dueDate ? parseDueDate(values as Bill) : null
+                  }
                   onChange={(date) => handleDueDateChange(date)}
                   required
                 />
-                {!!errors.dueDate && (
+                {!!errors.dueDate && touched.dueDate && (
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <ExclamationCircleIcon
                       className="h-5 w-5 text-red-500"
@@ -309,7 +332,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 )}
               </div>
               <p className="mt-1 h-5 text-sm text-red-600" id="dueDate-error">
-                {!!errors.dueDate && errors.dueDate}
+                {!!errors.dueDate && touched.dueDate && errors.dueDate}
               </p>
             </div>
 
@@ -317,10 +340,10 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
               <Switch.Group as="div" className="mt-1 mb-6 flex items-center">
                 <Switch
                   className={clsx(
-                    bill?.autoPaid ? 'bg-cyan-600' : 'bg-gray-200',
+                    values.autoPaid ? 'bg-cyan-600' : 'bg-gray-200',
                     'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2'
                   )}
-                  checked={bill?.autoPaid || false}
+                  checked={values.autoPaid || false}
                   onChange={(autoPaid) =>
                     handleChange({
                       target: { name: 'autoPaid', value: autoPaid },
@@ -330,7 +353,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                   <span
                     aria-hidden="true"
                     className={clsx(
-                      bill?.autoPaid ? 'translate-x-5' : 'translate-x-0',
+                      values.autoPaid ? 'translate-x-5' : 'translate-x-0',
                       'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
                     )}
                   />
@@ -371,7 +394,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 prefix={'$'}
                 decimalScale={2}
                 allowNegativeValue={false}
-                value={bill?.balance || ''}
+                value={values.balance || undefined}
                 onValueChange={handleNumberChange}
               />
             </div>
@@ -389,7 +412,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 id="owner"
                 placeholder="Jane"
                 className="mt-1 mb-6 block w-full rounded-md border-gray-300 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
-                value={bill?.owner || ''}
+                value={values.owner || ''}
                 onChange={handleChange}
               />
             </div>
@@ -407,7 +430,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 id="website"
                 placeholder="https://example.com"
                 className="mt-1 mb-6 block w-full rounded-md border-gray-300 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
-                value={bill?.website || ''}
+                value={values.website || ''}
                 onChange={handleChange}
               />
             </div>
@@ -425,7 +448,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 id="username"
                 placeholder="janedoe"
                 className="mt-1 mb-6 block w-full rounded-md border-gray-300 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
-                value={bill?.username || ''}
+                value={values.username || ''}
                 onChange={handleChange}
               />
             </div>
@@ -443,12 +466,12 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                 id="password"
                 placeholder="********"
                 className="mt-1 mb-6 block w-full rounded-md border-gray-300 placeholder-gray-400 focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
-                value={bill?.password || ''}
+                value={values.password || ''}
                 onChange={handleChange}
               />
             </div>
 
-            {bill?.id && (
+            {values.id && (
               <div className="col-span-12 sm:col-span-6">
                 <label className="block text-sm font-medium text-gray-700">
                   Metadata
@@ -459,8 +482,8 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                       <tr>
                         <td>Created:</td>
                         <td className="pl-4">
-                          {bill?.createdAt &&
-                            new Date(bill?.createdAt).toLocaleString(
+                          {values.createdAt &&
+                            new Date(values.createdAt).toLocaleString(
                               'en-US',
                               dateOptions
                             )}
@@ -469,8 +492,8 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
                       <tr>
                         <td>Modified:</td>
                         <td className="pl-4">
-                          {bill?.updatedAt &&
-                            new Date(bill?.updatedAt).toLocaleString(
+                          {values.updatedAt &&
+                            new Date(values.updatedAt).toLocaleString(
                               'en-US',
                               dateOptions
                             )}
@@ -499,7 +522,7 @@ export function BillForm({ bill: initialValues }: BillFormProps) {
             >
               Reset
             </button>
-            {!bill?.id && (
+            {!values.id && (
               <button
                 type="submit"
                 className="order-2 mb-5 inline-flex w-full justify-center rounded-md border border-transparent bg-cyan-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 sm:order-3 sm:mb-0 sm:ml-5 sm:w-auto"
