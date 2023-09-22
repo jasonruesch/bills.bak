@@ -23,7 +23,7 @@ export async function action({
   });
 }
 
-export default function ContactPage() {
+export function ContactPage() {
   const { contact } = useLoaderData() as { contact: Contact };
 
   return (
@@ -64,7 +64,7 @@ export default function ContactPage() {
           </Form>
           <Form
             method="post"
-            action="destroy"
+            action="delete"
             onSubmit={(event) => {
               if (
                 // eslint-disable-next-line no-restricted-globals

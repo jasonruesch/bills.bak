@@ -8,51 +8,32 @@ import {
 } from 'react-router-dom';
 
 import App from './app/app';
-import IndexContactPage from './app/contact';
-import ContactPage, {
-  action as contactAction,
-  loader as contactLoader,
-} from './app/contact/contact';
-import ContactsPage, { loader as contactsLoader } from './app/contact/contacts';
-import { action as destroyAction } from './app/contact/destroy';
-import EditContactPage, { action as editAction } from './app/contact/edit';
-import NewContactPage, { action as newAction } from './app/contact/new';
+import {
+  ContactPage,
+  ContactsPage,
+  EditContactPage,
+  NewContactPage,
+  contactAction,
+  contactLoader,
+  contactsLoader,
+  deleteContactAction,
+  editContactAction,
+  newContactAction,
+} from './app/contacts';
+import { DefaultContactPage } from './app/contacts/default';
 import ErrorPage from './app/error';
-
-// const router = createBrowserRouter([
-//   {
-//     path: '/',
-//     element: <App />,
-//     errorElement: <ErrorPage />,
-//     children: [
-//       {
-//         path: 'contacts',
-//         element: <ContactsPage />,
-//         errorElement: <ErrorPage />,
-//         loader: contactsLoader,
-//         children: [
-//           { index: true, element: <IndexContactPage /> },
-//           {
-//             path: ':contactId',
-//             element: <ContactPage />,
-//             loader: contactLoader,
-//             action: contactAction,
-//           },
-//           {
-//             path: ':contactId/edit',
-//             element: <EditContactPage />,
-//             loader: contactLoader,
-//             action: editAction,
-//           },
-//           {
-//             path: ':contactId/destroy',
-//             action: destroyAction,
-//           },
-//         ],
-//       },
-//     ],
-//   },
-// ]);
+import {
+  EditUserPage,
+  NewUserPage,
+  UserPage,
+  UsersPage,
+  deleteUserAction,
+  editUserAction,
+  newUserAction,
+  userAction,
+  userLoader,
+  usersLoader,
+} from './app/users';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,21 +44,42 @@ const router = createBrowserRouter(
         errorElement={<ErrorPage />}
         loader={contactsLoader}
       >
-        <Route index element={<IndexContactPage />} />
+        <Route index element={<DefaultContactPage />} />
         <Route
           path=":contactId"
           element={<ContactPage />}
           loader={contactLoader}
           action={contactAction}
         />
-        <Route path="new" element={<NewContactPage />} action={newAction} />
+        <Route
+          path="new"
+          element={<NewContactPage />}
+          action={newContactAction}
+        />
         <Route
           path=":contactId/edit"
           element={<EditContactPage />}
           loader={contactLoader}
-          action={editAction}
+          action={editContactAction}
         />
-        <Route path=":contactId/destroy" action={destroyAction} />
+        <Route path=":contactId/delete" action={deleteContactAction} />
+      </Route>
+      <Route path="users" errorElement={<ErrorPage />}>
+        <Route index element={<UsersPage />} loader={usersLoader} />
+        <Route
+          path=":userId"
+          element={<UserPage />}
+          loader={userLoader}
+          action={userAction}
+        />
+        <Route path="new" element={<NewUserPage />} action={newUserAction} />
+        <Route
+          path=":userId/edit"
+          element={<EditUserPage />}
+          loader={userLoader}
+          action={editUserAction}
+        />
+        <Route path=":userId/delete" action={deleteUserAction} />
       </Route>
     </Route>
   )

@@ -2,7 +2,8 @@ import { Params, redirect, useLoaderData } from 'react-router-dom';
 
 import { Contact, updateContact } from '@/data';
 import { fromEntries } from '@/lib';
-import ContactForm from './form';
+
+import { ContactForm } from './form';
 
 export async function action({
   request,
@@ -17,7 +18,7 @@ export async function action({
   return redirect(`/contacts/${params.contactId}`);
 }
 
-export default function EditContactPage() {
+export function EditContactPage() {
   const { contact } = useLoaderData() as { contact: Contact };
 
   return <ContactForm contact={contact} />;

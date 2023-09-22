@@ -1,4 +1,4 @@
-export default function IndexContactPage() {
+export function DefaultContactPage() {
   return (
     <p id="zero-state">
       This is a demo for React Router.

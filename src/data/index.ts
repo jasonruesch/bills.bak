@@ -1,2 +1,2 @@
-export * from './contact.model';
 export * from './contacts';
+export * from './users';

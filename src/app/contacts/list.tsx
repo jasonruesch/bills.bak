@@ -18,7 +18,7 @@ export async function loader({ request }: { request: Request }) {
   return { contacts, q };
 }
 
-export default function ContactsPage() {
+export function ContactListPage() {
   const { contacts, q } = useLoaderData() as {
     contacts: Contact[];
     q: string | null;

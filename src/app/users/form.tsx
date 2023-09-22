@@ -1,12 +1,12 @@
 import { Form, useNavigate } from 'react-router-dom';
 
-import { Contact } from '@/data';
+import { User } from '@/data';
 
-export default function ContactForm({ contact }: { contact?: Contact }) {
+export function UserForm({ user }: { user?: User }) {
   const navigate = useNavigate();
 
   return (
-    <Form method="post" id="contact-form">
+    <Form method="post" id="user-form">
       <p>
         <span>Name</span>
         <input
@@ -14,7 +14,7 @@ export default function ContactForm({ contact }: { contact?: Contact }) {
           aria-label="First name"
           type="text"
           name="first"
-          defaultValue={contact?.first}
+          defaultValue={user?.first}
           required
         />
         <input
@@ -22,7 +22,7 @@ export default function ContactForm({ contact }: { contact?: Contact }) {
           aria-label="Last name"
           type="text"
           name="last"
-          defaultValue={contact?.last}
+          defaultValue={user?.last}
           required
         />
       </p>
@@ -32,7 +32,7 @@ export default function ContactForm({ contact }: { contact?: Contact }) {
           type="text"
           name="twitter"
           placeholder="@jack"
-          defaultValue={contact?.twitter}
+          defaultValue={user?.twitter}
           required
         />
       </label>
@@ -43,22 +43,19 @@ export default function ContactForm({ contact }: { contact?: Contact }) {
           aria-label="Avatar URL"
           type="text"
           name="avatar"
-          defaultValue={contact?.avatar}
+          defaultValue={user?.avatar}
         />
       </label>
       <label>
         <span>Notes</span>
-        <textarea name="notes" defaultValue={contact?.notes} rows={6} />
+        <textarea name="notes" defaultValue={user?.notes} rows={6} />
       </label>
       <p>
         <button type="submit">Save</button>
         <button
           type="button"
           onClick={() =>
-            // contact?.id
-            //   ? navigate(`/contacts/${contact.id}`)
-            //   : navigate('/contacts')
-            navigate(-1)
+            user?.id ? navigate(`../${user.id}`) : navigate('..')
           }
         >
           Cancel

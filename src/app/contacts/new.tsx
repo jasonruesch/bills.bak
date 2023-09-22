@@ -2,7 +2,8 @@ import { redirect } from 'react-router-dom';
 
 import { Contact, createContact } from '@/data';
 import { fromEntries } from '@/lib';
-import ContactForm from './form';
+
+import { ContactForm } from './form';
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -11,6 +12,6 @@ export async function action({ request }: { request: Request }) {
   return redirect(`/contacts/${contact.id}`);
 }
 
-export default function NewContactPage() {
+export function NewContactPage() {
   return <ContactForm />;
 }
