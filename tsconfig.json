@@ -9,11 +9,15 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2020", "dom", "dom.iterable"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@/components": ["src/components/index.ts"],
+      "@/data": ["src/data/index.ts"],
+      "@/lib": ["src/lib/index.ts"]
+    },
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,
