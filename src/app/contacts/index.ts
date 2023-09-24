@@ -1,3 +1,4 @@
+export * from './components/form';
 export { action as deleteContactAction } from './delete';
 export {
   ContactPage,
@@ -5,7 +6,6 @@ export {
   loader as contactLoader,
 } from './detail';
 export { EditContactPage, action as editContactAction } from './edit';
-export * from './form';
 export {
   ContactListPage as ContactsPage,
   loader as contactsLoader,

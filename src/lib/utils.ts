@@ -5,5 +5,6 @@ export const fromEntries = <
   formData: U
 ): T => {
   const entity = Object.fromEntries(formData);
+
   return entity as unknown as T;
 };

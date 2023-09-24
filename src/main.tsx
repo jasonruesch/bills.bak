@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import {
+  Navigate,
   Route,
   RouterProvider,
   createBrowserRouter,
@@ -38,6 +39,7 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+      <Route index element={<Navigate to="/contacts" replace />} />
       <Route
         path="contacts"
         element={<ContactsPage />}

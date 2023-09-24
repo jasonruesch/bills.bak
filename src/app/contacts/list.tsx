@@ -11,10 +11,13 @@ import {
 
 import { Contact, getContacts } from '@/data';
 
+import Styles from '../styles';
+
 export async function loader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const q = url.searchParams.get('q');
   const contacts = await getContacts(q as string);
+
   return { contacts, q };
 }
 
@@ -45,6 +48,8 @@ export function ContactListPage() {
 
   return (
     <>
+      <Styles />
+
       <div id="sidebar">
         <h1>React Router Contacts</h1>
         <div>

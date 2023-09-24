@@ -7,6 +7,7 @@ export async function loader({ params }: { params: Params<string> }) {
   if (!contact) {
     throw new Response(null, { status: 404, statusText: 'Not Found' });
   }
+
   return { contact };
 }
 
@@ -18,6 +19,7 @@ export async function action({
   params: Params<string>;
 }) {
   const formData = await request.formData();
+
   return updateContact(params.contactId as string, {
     favorite: formData.get('favorite') === 'true',
   });
