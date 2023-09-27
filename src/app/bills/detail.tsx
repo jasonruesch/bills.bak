@@ -6,17 +6,17 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import { User, getUser, updateUser } from '@/data';
+import { Bill, getBill, updateBill } from '@/data';
 
 import Styles from '../styles';
 
 export async function loader({ params }: { params: Params<string> }) {
-  const user = await getUser(params.userId as string);
-  if (!user) {
+  const bill = await getBill(params.billId as string);
+  if (!bill) {
     throw new Response(null, { status: 404, statusText: 'Not Found' });
   }
 
-  return { user };
+  return { bill };
 }
 export async function action({
   request,
@@ -27,13 +27,13 @@ export async function action({
 }) {
   const formData = await request.formData();
 
-  return updateUser(params.userId as string, {
-    favorite: formData.get('favorite') === 'true',
+  return updateBill(params.billId as string, {
+    paid: formData.get('paid') === 'true',
   });
 }
 
-export function UserPage() {
-  const { user } = useLoaderData() as { user: User };
+export function BillPage() {
+  const { bill } = useLoaderData() as { bill: Bill };
   const navigate = useNavigate();
 
   return (
@@ -45,35 +45,30 @@ export function UserPage() {
           Back
         </button>
 
-        <div id="user">
-          <div>
-            <img key={user.avatar} src={user.avatar} alt="" />
-          </div>
+        <div id="bill">
           <div>
             <h1>
-              {user.first || user.last ? (
-                <>
-                  {user.first} {user.last}
-                </>
-              ) : (
-                <i>No Name</i>
-              )}{' '}
-              <Favorite user={user} />
+              {bill.name ? bill.name : <i>No Name</i>} <Paid bill={bill} />
             </h1>
 
-            {user.twitter && (
-              <p>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://twitter.com/${user.twitter}`}
-                >
-                  {user.twitter}
-                </a>
-              </p>
-            )}
+            <p>
+              {bill.amount.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
 
-            {user.notes && <p>{user.notes}</p>}
+              {bill.dueDate && (
+                <>
+                  {' '}
+                  due{' '}
+                  <time dateTime={bill.dueDate.toString()}>
+                    {Intl.DateTimeFormat('en-US', {
+                      dateStyle: 'short',
+                    }).format(bill.dueDate)}
+                  </time>
+                </>
+              )}
+            </p>
 
             <div>
               <Form action="edit">
@@ -101,22 +96,24 @@ export function UserPage() {
   );
 }
 
-function Favorite({ user }: { user: User }) {
+function Paid({ bill }: { bill: Bill }) {
   const fetcher = useFetcher();
-  let favorite = user.favorite;
+  let paid = bill.paid;
   if (fetcher.formData) {
-    favorite = fetcher.formData.get('favorite') === 'true';
+    paid = fetcher.formData.get('paid') === 'true';
   }
 
   return (
     <fetcher.Form method="post">
       <button
         type="submit"
-        name="favorite"
-        value={favorite ? 'false' : 'true'}
-        aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
+        name="paid"
+        value={paid ? 'false' : 'true'}
+        aria-label={paid ? 'Mark as unpaid' : 'Mark as paid'}
+        className="flex items-center gap-1"
       >
-        {favorite ? '★' : '☆'}
+        <span>Paid</span>
+        {paid ? '✔' : '✘'}
       </button>
     </fetcher.Form>
   );

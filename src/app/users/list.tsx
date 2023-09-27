@@ -39,8 +39,10 @@ export function UserListPage() {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isFirstSearch = q === null;
-    const formData = new FormData(event.currentTarget.form ?? undefined);
+    const formData = new FormData(event.target.form ?? undefined);
+
     if (formData.get('q') === '') formData.delete('q');
+
     submit(formData, { replace: !isFirstSearch });
   };
 

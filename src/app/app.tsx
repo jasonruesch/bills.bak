@@ -8,6 +8,14 @@ export function App() {
           <ul className="flex gap-2">
             <li>
               <NavLink
+                to="/bills"
+                className={({ isActive }) => (isActive ? 'text-blue-500' : '')}
+              >
+                Bills
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to="/contacts"
                 className={({ isActive }) => (isActive ? 'text-blue-500' : '')}
               >

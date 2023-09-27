@@ -1,4 +1,3 @@
-export * from './components/form';
 export { action as deleteUserAction } from './delete';
 export { UserPage, action as userAction, loader as userLoader } from './detail';
 export { EditUserPage, action as editUserAction } from './edit';

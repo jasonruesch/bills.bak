@@ -32,7 +32,7 @@ body {
   color: #121212;
 }
 textarea,
-input,
+input:not([type='checkbox']),
 button,
 .button {
   font-size: 1rem;
@@ -55,7 +55,7 @@ button,
 }
 
 textarea:hover,
-input:hover,
+input:not([type='checkbox']):hover,
 button:hover,
 .button:hover {
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
@@ -550,6 +550,133 @@ i {
 }
 
 #user-form p:last-child button[type='button'] {
+  color: inherit;
+}
+
+#bill h1 {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+#bill h1 form {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+#bill h1 form button {
+  box-shadow: none;
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding: 0;
+}
+#bill h1 form button[value='true'] {
+  color: #a4a4a4;
+}
+#bill h1 form button[value='true']:hover,
+#bill h1 form button[value='false'] {
+  color: #eeb004;
+}
+
+#bill {
+  max-width: 40rem;
+  display: flex;
+}
+
+#bill h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+#bill h1 + p {
+  margin: 0;
+}
+
+#bill h1 + p + p {
+  white-space: break-spaces;
+}
+
+#bill h1:focus {
+  outline: none;
+  color: hsl(224, 98%, 58%);
+}
+
+#bill a[href*='twitter'] {
+  display: flex;
+  font-size: 1.5rem;
+  color: #3992ff;
+  text-decoration: none;
+}
+#bill a[href*='twitter']:hover {
+  text-decoration: underline;
+}
+
+#bill img {
+  width: 12rem;
+  height: 12rem;
+  background: #c8c8c8;
+  margin-right: 2rem;
+  border-radius: 1.5rem;
+  object-fit: cover;
+}
+
+#bill h1 ~ div {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+#bill-form {
+  display: flex;
+  max-width: 40rem;
+  flex-direction: column;
+  gap: 1rem;
+}
+#bill-form > p {
+  margin: 0;
+  padding: 0;
+}
+#bill-form > p > :nth-child(2) {
+  margin-right: 1rem;
+}
+#bill-form > p,
+#bill-form label {
+  display: flex;
+}
+#bill-form p span,
+#bill-form label span {
+  width: 8rem;
+}
+#bill-form p input:not([type='checkbox']),
+#bill-form label input:not([type='checkbox']),
+#bill-form label textarea {
+  flex-grow: 2;
+}
+
+#bill-form-avatar {
+  margin-right: 2rem;
+}
+
+#bill-form-avatar img {
+  width: 12rem;
+  height: 12rem;
+  background: hsla(0, 0%, 0%, 0.2);
+  border-radius: 1rem;
+}
+
+#bill-form-avatar input:not([type='checkbox']) {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#bill-form p:last-child {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 0 0 8rem;
+}
+
+#bill-form p:last-child button[type='button'] {
   color: inherit;
 }
 `,

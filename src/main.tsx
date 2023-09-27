@@ -10,6 +10,18 @@ import {
 
 import App from './app/app';
 import {
+  BillListPage,
+  BillPage,
+  EditBillPage,
+  billAction,
+  billLoader,
+  billsLoader,
+  deleteBillAction,
+  editBillAction,
+  newBillAction,
+} from './app/bills';
+import { NewBillPage } from './app/bills/new';
+import {
   ContactPage,
   ContactsPage,
   EditContactPage,
@@ -39,7 +51,24 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
-      <Route index element={<Navigate to="/contacts" replace />} />
+      <Route index element={<Navigate to="/bills" replace />} />
+      <Route path="bills" errorElement={<ErrorPage />}>
+        <Route index element={<BillListPage />} loader={billsLoader} />
+        <Route path="new" element={<NewBillPage />} action={newBillAction} />
+        <Route
+          path=":billId"
+          element={<BillPage />}
+          loader={billLoader}
+          action={billAction}
+        />
+        <Route
+          path=":billId/edit"
+          element={<EditBillPage />}
+          loader={billLoader}
+          action={editBillAction}
+        />
+        <Route path=":billId/delete" action={deleteBillAction} />
+      </Route>
       <Route
         path="contacts"
         element={<ContactsPage />}
@@ -48,15 +77,15 @@ const router = createBrowserRouter(
       >
         <Route index element={<DefaultContactPage />} />
         <Route
+          path="new"
+          element={<NewContactPage />}
+          action={newContactAction}
+        />
+        <Route
           path=":contactId"
           element={<ContactPage />}
           loader={contactLoader}
           action={contactAction}
-        />
-        <Route
-          path="new"
-          element={<NewContactPage />}
-          action={newContactAction}
         />
         <Route
           path=":contactId/edit"
@@ -64,17 +93,17 @@ const router = createBrowserRouter(
           loader={contactLoader}
           action={editContactAction}
         />
-        <Route path=":contactId/delete" action={deleteContactAction} />
+        <Route path=":contactId/delete" action={deleteContactAction} />R
       </Route>
       <Route path="users" errorElement={<ErrorPage />}>
         <Route index element={<UsersPage />} loader={usersLoader} />
+        <Route path="new" element={<NewUserPage />} action={newUserAction} />
         <Route
           path=":userId"
           element={<UserPage />}
           loader={userLoader}
           action={userAction}
         />
-        <Route path="new" element={<NewUserPage />} action={newUserAction} />
         <Route
           path=":userId/edit"
           element={<EditUserPage />}

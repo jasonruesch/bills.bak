@@ -94,6 +94,7 @@ function Favorite({ contact }: { contact: Contact }) {
   return (
     <fetcher.Form method="post">
       <button
+        type="submit"
         name="favorite"
         value={favorite ? 'false' : 'true'}
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
