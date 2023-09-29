@@ -1,0 +1,17 @@
+{
+  "framework": "vite",
+  "outputDirectory": "dist/bills",
+  "rewrites": [
+    {
+      "source": "/((?!api/.*).*)",
+      "destination": "/index.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?!localhost).*"
+        }
+      ]
+    }
+  ],
+  "devCommand": "npx nx run bills:serve-dev --port $PORT"
+}
