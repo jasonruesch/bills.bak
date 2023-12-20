@@ -4,6 +4,20 @@
   "sourceRoot": "libs/bills/data-access/src",
   "projectType": "library",
   "targets": {
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["supabase start"],
+        "cwd": "libs/bills/data-access"
+      }
+    },
+    "stop": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["supabase stop"],
+        "cwd": "libs/bills/data-access"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
